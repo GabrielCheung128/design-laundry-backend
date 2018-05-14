@@ -1,13 +1,14 @@
+const User = require('../controller/user');
 const router = require('koa-router')()
+const errorHandle = require('../middlewares/error-handle');
 
 router.prefix('/users')
 
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
-})
+router
+    .post('/', errorHandle(User.create))
+    .get('/:id', errorHandle(User.get))
+    .get('/', errorHandle(User.search))
+    .put('/:id', errorHandle(User.update))
+    .delete('/:id', errorHandle(User.delete));
 
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
-
-module.exports = router
+module.exports = router;
