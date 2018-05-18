@@ -73,29 +73,41 @@ module.exports = {
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": "successful operation"
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
                     }
                 }
             },
         },
-        "/users/{username}": {
+        "/users/{id}": {
             "get": {
                 "tags": [
                     "user"
                 ],
-                "summary": "Get user by user name",
+                "summary": "Get user by user id",
                 "description": "",
-                "operationId": "getUserByName",
+                "operationId": "getUserById",
                 "produces": [
                     "application/xml",
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "name": "username",
+                        "name": "id",
                         "in": "path",
-                        "description": "The name that needs to be fetched. Use user1 for testing. ",
+                        "description": "The name that needs to be fetched. ",
                         "required": true,
                         "type": "string"
                     }
@@ -109,6 +121,9 @@ module.exports = {
                     },
                     "400": {
                         "description": "Invalid username supplied"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     },
                     "404": {
                         "description": "User not found"
@@ -148,6 +163,9 @@ module.exports = {
                     "400": {
                         "description": "Invalid user supplied"
                     },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
                     "404": {
                         "description": "User not found"
                     }
@@ -166,16 +184,25 @@ module.exports = {
                 ],
                 "parameters": [
                     {
-                        "name": "username",
+                        "name": "id",
                         "in": "path",
-                        "description": "The name that needs to be deleted",
+                        "description": "The name that needs to be fetched. ",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
                     "400": {
                         "description": "Invalid username supplied"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     },
                     "404": {
                         "description": "User not found"
@@ -185,20 +212,18 @@ module.exports = {
         }
     },
     "securityDefinitions": {
-        "petstore_auth": {
+        "login": {
             "type": "oauth2",
-            "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+            "authorizationUrl": "http://localhost:3000/auth",
             "flow": "implicit",
             "scopes": {
-                "write:pets": "modify pets in your account",
-                "read:pets": "read your pets"
             }
         },
-        "api_key": {
-            "type": "apiKey",
-            "name": "api_key",
-            "in": "header"
-        }
+        // "api_key": {
+        //     "type": "apiKey",
+        //     "name": "api_key",
+        //     "in": "header"
+        // }
     },
     "definitions": {
         "User": {

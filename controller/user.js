@@ -1,24 +1,25 @@
-const User = require('../db').User;
+const db = require('../db');
+const User = db.User;
 const moment = require('moment');
 const objectIdToTimestamp = require('objectid-to-timestamp');
 const sha1 = require('sha1');
 const createToken = require('../utils/token').createToken;
 const parse = require('querystring').parse;
+const _ = require('lodash');
 
 module.exports = class UserController {
     static async create(ctx, next) {
-        const username = ctx.request.body.username;
-        const password = ctx.request.body.password;
-        const doc = await User.findOne({ username });
+        const body = Object.assign({}, ctx.request.body);
+        const password = body.password;
+        const doc = await User.findOne({ username: body.username });
         if (doc) {
             ctx.status = 422;
             ctx.body = { error: { username: 'username already exist' } };
         } else {
-            const token = createToken(username);
-            const user = new User({
-                username,
+            const token = createToken(body);
+            const user = new User(Object.assign({}, body, {
                 password: sha1(password),
-            });
+            }));
             user.createTime = moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss');
             await user.save();
             ctx.status = 201;
@@ -29,7 +30,6 @@ module.exports = class UserController {
     }
 
     static async get(ctx, next) {
-        console.log(ctx);
         const doc = await User.find({ _id: ctx.params.id });
         if (doc) {
             ctx.status = 200;
