@@ -8,7 +8,7 @@ const base = Joi.object().keys({
     mobile: Joi.string(),
     address: Joi.string(),
     role: Joi.number().required().error(new Error('Role is not valid')),
-    status: Joi.number().required(),
+    status: Joi.string().required(),
     token: Joi.string(),
 });
 
