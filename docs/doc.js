@@ -229,9 +229,8 @@ module.exports = {
         "User": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
+                "_id": {
+                    "type": "string",
                 },
                 "username": {
                     "type": "string"
@@ -248,14 +247,17 @@ module.exports = {
                 "password": {
                     "type": "string"
                 },
-                "phone": {
+                "mobile": {
                     "type": "string"
                 },
-                "userStatus": {
+                "role": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "integer",
                     "format": "int32",
                     "description": "User Status"
-                }
+                },
             },
             "xml": {
                 "name": "User"

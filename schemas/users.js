@@ -13,16 +13,22 @@ const base = Joi.object().keys({
 });
 
 const db = base.keys({
-    password: Joi.string().required().error(() => 'Password is not valid'),
+    password: Joi.string().required().error(() => 'Password is not valid').strip(),
     createTime: Joi.date().required(),
     updateTime: Joi.date(),
 });
 
 const router = base.keys({
     password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/).required().error(() => 'Password is not valid'),
+    token: Joi.string().forbidden(),
+});
+
+const params = Joi.object().keys({
+    username: Joi.string(),
 });
 
 module.exports = {
     db,
     router,
+    params,
 };

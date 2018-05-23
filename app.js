@@ -36,9 +36,9 @@ app.use(async (ctx, next) => {
 })
 app.use(koaSwagger);
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
-app.use(auth.routes(), auth.allowedMethods())
+app.use(index.routes(), index.allowedMethods());
+app.use(users.routes(), users.allowedMethods());
+app.use(auth.routes(), auth.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
