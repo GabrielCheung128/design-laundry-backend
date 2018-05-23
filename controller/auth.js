@@ -11,11 +11,8 @@ module.exports = class Auth {
             doc.token = token;
             await doc.save();
             ctx.status = 200;
-            ctx.body = {
-                username,
-                token,
-                createTime: doc.createTime,
-            }
+            ctx.cookies.set({ Authorization: token });
+            ctx.body = { token };
         } else {
             ctx.status = 403;
             ctx.body = { error: { info: 'username or password not correct' } };
