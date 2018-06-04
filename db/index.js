@@ -1,26 +1,16 @@
-const Mongoose = require('Mongoose');
-Mongoose.connect('mongodb://localhost:27017/dl');
-const Joigoose = require('joigoose')(Mongoose);
-const userSchema = require('../schemas/users');
-const roleSchema = require('../schemas/roles');
-const orderSchema = require('../schemas/orders');
+const Sequelize = require('sequelize');
+const roleDefine = require('../models/role');
+const userDefine = require('../models/user');
 
+const sequelize = new Sequelize('postgresql://localhost');
 
-let db = Mongoose.connection;
-Mongoose.Propmise = global.Promise;
+const Role = roleDefine(sequelize, {});
+const User = userDefine(sequelize, { Role });
 
-db.on('error', () => {
-    console.log('error');
-});
+Role.sync();
+User.sync();
 
-db.on('open', () => {
-    console.log('success');
-});
-
-const model = {
-    User: Mongoose.model('User', new Mongoose.Schema(Joigoose.convert(userSchema.db))),
-    Role: Mongoose.model('Role', new Mongoose.Schema(Joigoose.convert(roleSchema.db))),
-    Order: Mongoose.model('Order', new Mongoose.Schema(Joigoose.convert(orderSchema.db))),
-};
-module.exports = model;
-
+module.exports = {
+    Role,
+    User,
+}

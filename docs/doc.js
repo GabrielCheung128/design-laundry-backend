@@ -143,7 +143,7 @@ module.exports = {
                 ],
                 "parameters": [
                     {
-                        "name": "username",
+                        "name": "id",
                         "in": "path",
                         "description": "name that need to be updated",
                         "required": true,
@@ -209,7 +209,193 @@ module.exports = {
                     }
                 }
             }
-        }
+        },
+        "/roles": {
+            "post": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Create role",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "createRole",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created role object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Search roles",
+                "description": "",
+                "operationId": "getRole",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "find user by name",
+                        "required": false,
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+        },
+        "/roles/{id}": {
+            "get": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Get user by role id",
+                "description": "",
+                "operationId": "getRoleById",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The name that needs to be fetched. ",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username supplied"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Updated role",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "updateRole",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "name that need to be updated",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Delete role",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "deleteRole",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The name that needs to be fetched. ",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username supplied"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
     },
     "securityDefinitions": {
         "login": {
@@ -229,7 +415,7 @@ module.exports = {
         "User": {
             "type": "object",
             "properties": {
-                "_id": {
+                "id": {
                     "type": "string",
                 },
                 "username": {
@@ -261,6 +447,23 @@ module.exports = {
             },
             "xml": {
                 "name": "User"
+            }
+        },
+        "Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                },
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "string"
+                },
+            },
+            "xml": {
+                "name": "Role"
             }
         },
         "ApiResponse": {

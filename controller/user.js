@@ -7,33 +7,39 @@ const createToken = require('../utils/token').createToken;
 const parse = require('querystring').parse;
 const _ = require('lodash');
 
+function removeSensitiveKeys(doc, sensitiveKeys = ['password']) {
+    return _.omit(doc.get(), sensitiveKeys);
+}
+
+function allowSearch(querystring, keys) {
+    return _.pick(parse(querystring), keys);
+}
+
 module.exports = class UserController {
     static async create(ctx, next) {
         const body = Object.assign({}, ctx.request.body);
         const password = body.password;
-        const doc = await User.findOne({ username: body.username });
+        const doc = await User.findOne({ where: { username: body.username } });
         if (doc) {
             ctx.status = 422;
             ctx.body = { error: { username: 'username already exist' } };
         } else {
-            const token = createToken(body);
-            const user = new User(Object.assign({}, body, {
+            const user = await User.create(Object.assign({}, body, {
                 password: sha1(password),
             }));
-            user.createTime = moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss');
-            await user.save();
+            const token = createToken(_.pick(user.get(), ['uuid', 'firstName', 'lastName']));
             ctx.status = 201;
-            ctx.cookies.set('token', token);
-            ctx.body = { username };
+            ctx.cookies.set({ Authorization: token });
+            ctx.body = removeSensitiveKeys(user);
         }
         next();
     }
 
     static async get(ctx, next) {
-        const doc = await User.find({ _id: ctx.params.id });
+        const doc = await User.findById(ctx.params.id);
         if (doc) {
             ctx.status = 200;
-            ctx.body = doc;
+            ctx.body = removeSensitiveKeys(doc);
         } else {
             ctx.status = 404;
         }
@@ -41,24 +47,25 @@ module.exports = class UserController {
     }
 
     static async update(ctx, next) {
-        const doc = await  User.findOne({ _id: ctx.params.id });
+        const doc = await User.findById(ctx.params.id);
         if (doc) {
-            Object.assign(doc, ctx.request.body);
-            await doc.save();
+            await doc.update(_.omit(ctx.request.body, ['username', 'roleId']));
+            ctx.status = 200;
+            ctx.body = removeSensitiveKeys(doc);
         }
         next();
     }
 
     static async search(ctx, next) {
-        const doc = await User.find(parse(ctx.querystring));
+        const doc = await User.findAll({ where: allowSearch(ctx.querystring, ['username']) });
         ctx.status = 200;
-        ctx.body = doc;
+        ctx.body = doc.map(user => removeSensitiveKeys(user));
         next();
     }
 
     static async delete(ctx, next) {
         const id = ctx.params.id;
-        await User.findOneAndRemove({ _id: id });
+        await User.destroy({ where: { uuid: id }});
         ctx.status = 200;
         next();
     }

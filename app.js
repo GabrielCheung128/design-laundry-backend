@@ -11,6 +11,7 @@ const koaSwagger = require('koa2-swagger-ui')(spec);
 const index = require('./routes/index');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const roles = require('./routes/roles');
 
 // error handler
 onerror(app)
@@ -39,6 +40,7 @@ app.use(koaSwagger);
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(auth.routes(), auth.allowedMethods());
+app.use(roles.routes(), roles.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

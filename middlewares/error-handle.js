@@ -6,6 +6,8 @@ const errorHandle = (event) => async (ctx, next) => {
             ctx.status = 422;
             ctx.body = e.message;
         }
+        ctx.body = e.message;
+        ctx.status = 500;
     }
 }
 
