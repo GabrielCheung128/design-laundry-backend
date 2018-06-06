@@ -6,7 +6,7 @@ module.exports = (sequelize, options) => (sequelize.define('role', {
         allowNull: false,
     },
     permissions: {
-        type: Sequelize.STRING,
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
     },
 }));

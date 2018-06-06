@@ -6,9 +6,11 @@
     "start": "node bin/www",
     "dev": "./node_modules/.bin/nodemon bin/www",
     "prd": "pm2 start bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha test/*.test.js* test/**/*.test.js*  --timeout 5000"
   },
   "dependencies": {
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
     "debug": "^2.6.3",
     "joi": "^13.3.0",
     "joigoose": "^4.0.0",
@@ -25,6 +27,7 @@
     "koa-views": "^5.2.1",
     "koa2-swagger-ui": "^2.9.1",
     "lodash": "^4.17.10",
+    "mocha": "^5.2.0",
     "moment": "^2.22.1",
     "mongodb": "^3.0.7",
     "mongoose": "^5.0.17",
@@ -33,7 +36,9 @@
     "pg-hstore": "^2.3.2",
     "pug": "^2.0.0-rc.1",
     "sequelize": "^4.37.10",
-    "sha1": "^1.1.1"
+    "sha1": "^1.1.1",
+    "sinon": "^5.0.10",
+    "sinon-chai": "^3.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"

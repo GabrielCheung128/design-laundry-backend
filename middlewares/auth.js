@@ -1,14 +1,15 @@
 const verifyToken = require('../utils/token').verifyToken;
 
 const auth = (event) => async (ctx, next) => {
-    const authorization = ctx.get('Authorization');
-    let user;
-    !authorization && ctx.throw(401, 'no token detected in http headerAuthorization');
-    const token = authorization.split(' ')[1];
     try {
-        user = await verifyToken(token);
+        const authorization = ctx.get('Authorization');
+        if (!authorization) return ctx.throw(401, 'Invalid Token');
+        const token = authorization;
+        const user = await verifyToken(token);
+        event(ctx, next, { user });
     } catch (err) {
-        ctx.throw(401, 'invalid token');
+        ctx.throw(401, 'Invalid Token');
     }
-    event(ctx, next, user);
 }
+
+module.exports = auth;

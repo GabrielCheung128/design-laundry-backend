@@ -1,7 +1,5 @@
 const db = require('../db');
 const Role = db.Role;
-const moment = require('moment');
-const objectIdToTimestamp = require('objectid-to-timestamp');
 const sha1 = require('sha1');
 const createToken = require('../utils/token').createToken;
 const parse = require('querystring').parse;
