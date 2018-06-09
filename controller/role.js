@@ -38,7 +38,7 @@ module.exports = class RoleController {
         const doc = await Role.findAll({ where: parse(ctx.querystring) });
         ctx.status = 200;
         ctx.body = doc;
-        next();
+        next(ctx);
     }
 
     static async delete(ctx, next) {

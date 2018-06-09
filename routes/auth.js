@@ -4,6 +4,7 @@ const errorHandle = require('../middlewares/error-handle');
 
 router.prefix('/auth')
 
-router.post('/', errorHandle(Auth.login));
+router.post('/login', errorHandle(Auth.login));
+router.post('/register', errorHandle(Auth.register));
 
 module.exports = router;

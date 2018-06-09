@@ -12,18 +12,90 @@ module.exports = {
     "basePath": "/",
     "tags": [
         {
+            "name": "auth",
+            "description": "Operations about auth",
+            "externalDocs": {
+                "description": "Find out more about our store",
+                "url": "http://localhost:3000/auth"
+            }
+        },
+        {
             "name": "user",
             "description": "Operations about user",
             "externalDocs": {
                 "description": "Find out more about our store",
                 "url": "http://localhost:3000/users"
             }
-        }
+        },
+        {
+            "name": "role",
+            "description": "Operations about role",
+            "externalDocs": {
+                "description": "Find out more about our store",
+                "url": "http://localhost:3000/roles"
+            }
+        },
     ],
     "schemes": [
         "http"
     ],
     "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": ["auth"],
+                "summary": "Login",
+                "description": "To login",
+                "operationId": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Auth"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "description": "For register",
+                "operationId": "Register",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Register",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+            }
+        },
         "/users": {
             "post": {
                 "tags": [
@@ -33,7 +105,6 @@ module.exports = {
                 "description": "This can only be done by the logged in user.",
                 "operationId": "createUser",
                 "produces": [
-                    "application/xml",
                     "application/json"
                 ],
                 "parameters": [
@@ -51,7 +122,8 @@ module.exports = {
                     "default": {
                         "description": "successful operation"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "get": {
                 "tags": [
@@ -88,7 +160,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
         },
         "/users/{id}": {
@@ -128,7 +201,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "put": {
                 "tags": [
@@ -169,7 +243,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "delete": {
                 "tags": [
@@ -207,7 +282,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             }
         },
         "/roles": {
@@ -237,7 +313,8 @@ module.exports = {
                     "default": {
                         "description": "successful operation"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "get": {
                 "tags": [
@@ -274,7 +351,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
         },
         "/roles/{id}": {
@@ -314,7 +392,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "put": {
                 "tags": [
@@ -355,7 +434,8 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             },
             "delete": {
                 "tags": [
@@ -393,23 +473,17 @@ module.exports = {
                     "404": {
                         "description": "User not found"
                     }
-                }
+                },
+                "security": [{ "Bearer": [] }],
             }
         },
     },
     "securityDefinitions": {
-        "login": {
-            "type": "oauth2",
-            "authorizationUrl": "http://localhost:3000/auth",
-            "flow": "implicit",
-            "scopes": {
-            }
-        },
-        // "api_key": {
-        //     "type": "apiKey",
-        //     "name": "api_key",
-        //     "in": "header"
-        // }
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     },
     "definitions": {
         "User": {
@@ -436,8 +510,9 @@ module.exports = {
                 "mobile": {
                     "type": "string"
                 },
-                "role": {
-                    "type": "string"
+                "roleId": {
+                    "type": "integer",
+                    "format": "int32",
                 },
                 "status": {
                     "type": "integer",
@@ -464,6 +539,20 @@ module.exports = {
             },
             "xml": {
                 "name": "Role"
+            }
+        },
+        "Auth": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                },
+                "password": {
+                    "type": "string"
+                },
+            },
+            "xml": {
+                "name": "Auth"
             }
         },
         "ApiResponse": {
